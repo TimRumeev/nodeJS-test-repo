@@ -54,7 +54,7 @@ export class UserController extends BaseController implements IUserController {
 		if (!result) {
 			return next(new HTTPError(401, "Ошибка авторизации", "login"));
 		}
-		const jwt = await this.signJWT(req.body.email, this.configService.get("SECRET"));
+		const jwt = await this.signJWT(req.body.email, req.body.role, this.configService.get("SECRET"));
 		this.ok(res, { jwt });
 	}
 
@@ -65,21 +65,22 @@ export class UserController extends BaseController implements IUserController {
 	): Promise<void> {
 		const result = await this.userService.createUser(body);
 		if (!result) {
-			return next(new HTTPError(422, "Такой пользователь уже существует"));
+			return next(new HTTPError(422, "This user already exists"));
 		}
-		this.ok(res, { email: result.email, id: result.id });
+		this.ok(res, { email: result.email, id: result.id, role: result.role });
 	}
 
 	async info({ user }: Request, res: Response, next: NextFunction): Promise<void> {
 		const userInfo = await this.userService.getUserInfo(user);
-		this.ok(res, { email: userInfo?.email, id: userInfo?.id });
+		this.ok(res, { email: userInfo?.email, id: userInfo?.id, role: userInfo?.role });
 	}
 
-	private signJWT(email: string, secret: string): Promise<string> {
+	private signJWT(email: string, role: string, secret: string): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
 			sign(
 				{
 					email,
+					role,
 					iat: Math.floor(Date.now() / 1000),
 				},
 				secret,

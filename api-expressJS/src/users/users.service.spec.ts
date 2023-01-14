@@ -42,12 +42,14 @@ describe("User Service", () => {
 				email: user.email,
 				password: user.password,
 				id: 1,
+				role: "admin",
 			}),
 		);
 		createdUser = await usersService.createUser({
 			email: "a@a.ru",
 			name: "Anton",
 			password: "1",
+			role: "admin",
 		});
 		expect(createdUser?.id).toEqual(1);
 		expect(createdUser?.password).not.toEqual(1);

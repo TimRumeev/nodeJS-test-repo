@@ -9,4 +9,7 @@ export class UserRegisterDto {
 
 	@IsString({ message: "No name specified" })
 	name: string;
+
+	@IsString({ message: "No role specified " })
+	role: string;
 }

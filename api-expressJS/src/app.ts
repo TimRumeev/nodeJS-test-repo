@@ -10,6 +10,8 @@ import { IConfigService } from "./config/config.service.interface";
 import { IExeptionFilter } from "./errors/exeption.filter.interface";
 import { PrismaService } from "./database/prisma.service";
 import { AuthMiddleware } from "./common/auth.middleware";
+import { IProductsController } from "./products/products.controller.interface";
+import { ProductsController } from "./products/products.controller";
 
 @injectable()
 export class App {
@@ -23,6 +25,7 @@ export class App {
 		@inject(TYPES.ExeptionFilter) private exeptionFilter: IExeptionFilter,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.PrismaService) private prismaService: PrismaService,
+		@inject(TYPES.ProductsController) private productsController: ProductsController,
 	) {
 		this.app = express();
 		this.port = 8000;
@@ -36,6 +39,7 @@ export class App {
 
 	useRoutes(): void {
 		this.app.use("/users", this.userController.router);
+		this.app.use("/products", this.productsController.router);
 	}
 
 	useExeptionFilters(): void {

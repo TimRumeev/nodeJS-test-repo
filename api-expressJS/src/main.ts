@@ -7,6 +7,9 @@ import { ExeptionFilter } from "./errors/exeption.filter";
 import { IExeptionFilter } from "./errors/exeption.filter.interface";
 import { ILogger } from "./logger/logger.interface";
 import { LoggerService } from "./logger/logger.service";
+import { ProductsController } from "./products/products.controller";
+import { ProductsRepository } from "./products/products.repository";
+import { ProductService } from "./products/products.service";
 import { TYPES } from "./types";
 import { IUsersRepository } from "./users/user.repository.interface";
 import { UserController } from "./users/users.controller";
@@ -28,6 +31,9 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
 	bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
 	bind<IUsersRepository>(TYPES.UsersRepository).to(UsersRepository).inSingletonScope();
+	bind<ProductsController>(TYPES.ProductsController).to(ProductsController);
+	bind<ProductsRepository>(TYPES.ProductsRepository).to(ProductsRepository);
+	bind<ProductService>(TYPES.ProductService).to(ProductService);
 	bind<App>(TYPES.Application).to(App);
 });
 

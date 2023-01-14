@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { decode, verify } from "jsonwebtoken";
 import { HTTPError } from "../errors/http-error.class";
 
-export class AuthMiddleware implements IMiddleware {
+export class RoleMiddleWare implements IMiddleware {
 	constructor(private secret: string) {}
 	execute(req: Request, res: Response, next: NextFunction): void {
 		if (req.headers.authorization) {
@@ -12,8 +12,11 @@ export class AuthMiddleware implements IMiddleware {
 					next();
 				} else if (payload) {
 					if (typeof payload != "string") {
-						req.user = payload.email;
-						next();
+						if (payload.role == "admin") {
+							next();
+						} else {
+							new HTTPError(422, "This product already exists");
+						}
 					}
 				}
 			});

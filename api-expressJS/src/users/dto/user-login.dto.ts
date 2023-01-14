@@ -6,4 +6,7 @@ export class UserLoginDto {
 
 	@IsString()
 	password: string;
+
+	@IsString()
+	role: string;
 }
