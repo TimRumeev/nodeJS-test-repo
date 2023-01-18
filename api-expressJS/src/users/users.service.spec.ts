@@ -60,6 +60,7 @@ describe("User Service", () => {
 		const res = await usersService.validateUser({
 			email: "a@a.ru",
 			password: "1",
+			role: "admin",
 		});
 		expect(res).toBeTruthy();
 	});
@@ -69,6 +70,7 @@ describe("User Service", () => {
 		const res = await usersService.validateUser({
 			email: "a@a.ru",
 			password: "2",
+			role: "admin",
 		});
 		expect(res).toBeFalsy();
 	});
@@ -78,6 +80,7 @@ describe("User Service", () => {
 		const res = await usersService.validateUser({
 			email: "a@a.ru",
 			password: "1",
+			role: "admin",
 		});
 		expect(res).toBeFalsy();
 	});
