@@ -14,8 +14,8 @@ export class RoleMiddleWare implements IMiddleware {
 					if (typeof payload != "string") {
 						if (payload.role == "admin") {
 							next();
-						} else {
-							new HTTPError(422, "This product already exists");
+						} else if (payload.role == "user") {
+							next(new HTTPError(403, "role err"));
 						}
 					}
 				}

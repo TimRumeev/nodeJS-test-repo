@@ -52,7 +52,7 @@ export class UserController extends BaseController implements IUserController {
 	): Promise<void> {
 		const result = await this.userService.validateUser(req.body);
 		if (!result) {
-			return next(new HTTPError(401, "Ошибка авторизации", "login"));
+			return next(new HTTPError(401, "Authorization error ", "login"));
 		}
 		const jwt = await this.signJWT(req.body.email, req.body.role, this.configService.get("SECRET"));
 		this.ok(res, { jwt });

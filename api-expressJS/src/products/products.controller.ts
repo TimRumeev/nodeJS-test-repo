@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { injectable, inject } from "inversify";
+import { injectable, inject, id } from "inversify";
 import "reflect-metadata";
 import { AuthGuard } from "../common/auth.guard";
 import { BaseController } from "../common/base.controller";
@@ -10,6 +10,7 @@ import { ILogger } from "../logger/logger.interface";
 import { TYPES } from "../types";
 import { IProductsController } from "./products.controller.interface";
 import { IProductsService } from "./products.service.interface";
+import { ProductDto } from "./productsDto/product.dto";
 
 @injectable()
 export class ProductsController extends BaseController implements IProductsController {
@@ -46,7 +47,11 @@ export class ProductsController extends BaseController implements IProductsContr
 			},
 		]);
 	}
-	async create({ body }: Request, res: Response, next: NextFunction): Promise<void> {
+	async create(
+		{ body }: Request<{}, {}, ProductDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
 		const result = await this.productService.createProduct(body);
 		if (!result) {
 			return next(new HTTPError(422, "This product already exists"));
@@ -54,8 +59,11 @@ export class ProductsController extends BaseController implements IProductsContr
 		this.ok(res, { id: result.id, name: result.name, amount: result.amount });
 	}
 	async read({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		const productInfo = await this.productService.getProductInfo(body);
-		this.ok(res, { id: productInfo?.id, name: productInfo?.name, amount: productInfo?.amount });
+		const result = await this.productService.getProductInfo(body);
+		if (!result) {
+			return next(new HTTPError(404, "Product not find"));
+		}
+		this.ok(res, { id: result?.id, name: result?.name, amount: result?.amount });
 	}
 	async update({ body }: Request, res: Response, next: NextFunction): Promise<void> {
 		const result = await this.productService.updateProduct(body);
